@@ -1,87 +1,49 @@
 package com.hunorkovacs.koauthsync.service.provider.persistence
 
-import com.hunorkovacs.koauth.service.provider.persistence.{Nonce, RequestToken, AccessToken, Consumer}
+import com.hunorkovacs.koauth.service.provider.persistence
 
-import scala.collection.mutable.ListBuffer
+import scala.concurrent.{Await, ExecutionContext}
+import scala.concurrent.duration._
 
-class ExampleMemoryPersistence extends InMemoryPersistence {
+class ExampleMemoryPersistence(ec: ExecutionContext) extends InMemoryPersistence(ec) {
 
-  override val consumers = ListBuffer[Consumer](
-    Consumer("OmFjJKNqU4v791CWj6QKaBaiEep0WBxJ", "wr1KLYYH6o5yKFfiyN9ysKkPXcIAim2S", "admin")
-  )
-
-  override val requestTokens = ListBuffer[RequestToken](
-    RequestToken("OmFjJKNqU4v791CWj6QKaBaiEep0WBxJ", "nHmH9Qv6vPhZuvLVfofIXoKqpKA6BcSq",
-      "S6o9gbm6l6yyR3kcry9kzj40C6mhErmu", "oob", None, None),
-    RequestToken("OmFjJKNqU4v791CWj6QKaBaiEep0WBxJ", "DGnMlgdnCxc5ur3ZYX5t1BSjUOJUyqfZ",
-      "y6v2ZtztCLH9Yewoeb4NoIXRmWlb74xV", "oob", Some("admin"), Some("W8FMcCtnDZ1Gw1m4"))
-  )
-
-  override val accessTokens = ListBuffer[AccessToken](
-    AccessToken("OmFjJKNqU4v791CWj6QKaBaiEep0WBxJ", "NDW4H8pFTthDV7kmSkdyYDmiBspabYEW",
-      "e3lqNSPq1hU6v7FFnq6p6die6pFIYJU0", "admin")
-  )
+  override protected val asyncPers = new persistence.ExampleMemoryPersistence(ec)
 }
 
-class InMemoryPersistence extends Persistence {
+class InMemoryPersistence(ec: ExecutionContext) extends Persistence {
 
-  val consumers = ListBuffer.empty[Consumer]
-  val requestTokens = ListBuffer.empty[RequestToken]
-  val accessTokens = ListBuffer.empty[AccessToken]
-  val nonces = ListBuffer.empty[Nonce]
+  protected val asyncPers = new persistence.InMemoryPersistence(ec)
 
-  override def nonceExists(nonce: String, consumerKey: String, token: String): Boolean = {
-    nonces.exists(p => nonce == p.nonce && consumerKey == p.consumerKey && token == p.token)
-  }
+  override def nonceExists(nonce: String, consumerKey: String, token: String): Boolean =
+    Await.result(asyncPers.nonceExists(nonce, consumerKey, token), 2 seconds)
 
-  override def whoAuthorizedRequestToken(consumerKey: String, requestToken: String, verifier: String): Option[String] = {
-    requestTokens.find(p => consumerKey == p.consumerKey
-      && requestToken == p.requestToken
-      && p.verifier.contains(verifier)) match {
-      case None => None
-      case Some(foundRequestToken) => foundRequestToken.verifierUsername
-    }
-  }
+  override def whoAuthorizedRequestToken(consumerKey: String, requestToken: String, verifier: String): Option[String] =
+    Await.result(asyncPers.whoAuthorizedRequestToken(consumerKey, requestToken, verifier), 2 seconds)
 
-  override def getCallback(consumerKey: String, requestToken: String) = {
-    requestTokens.find(p => consumerKey == p.consumerKey
-      && requestToken == p.requestToken).map(_.callback)
-  }
+  override def getCallback(consumerKey: String, requestToken: String) =
+    Await.result(asyncPers.getCallback(consumerKey, requestToken), 2 seconds)
 
-  override def getAccessTokenSecret(consumerKey: String, accessToken: String): Option[String] = {
-    accessTokens.find(t => consumerKey == t.consumerKey && accessToken == t.accessToken)
-      .map(t => t.accessTokenSecret)
-  }
+  override def getAccessTokenSecret(consumerKey: String, accessToken: String): Option[String] =
+    Await.result(asyncPers.getAccessTokenSecret(consumerKey, accessToken), 2 seconds)
 
-  override def persistAccessToken(consumerKey: String, accessToken: String, accessTokenSecret: String, username: String): Unit = {
-    accessTokens += AccessToken(consumerKey, accessToken, accessTokenSecret, username)
-  }
+  override def persistAccessToken(consumerKey: String, accessToken: String, accessTokenSecret: String, username: String): Unit =
+    Await.result(asyncPers.persistAccessToken(consumerKey, accessToken, accessTokenSecret, username), 2 seconds)
 
-  override def persistRequestToken(consumerKey: String, requestToken: String, requestTokenSecret: String, callback: String): Unit = {
-    requestTokens += RequestToken(consumerKey, requestToken, requestTokenSecret, callback, None, None)
-  }
+  override def persistRequestToken(consumerKey: String, requestToken: String, requestTokenSecret: String, callback: String): Unit =
+    Await.result(asyncPers.persistRequestToken(consumerKey, requestToken, requestTokenSecret, callback), 2 seconds)
 
-  override def getConsumerSecret(consumerKey: String): Option[String] = {
-    consumers.find(c => consumerKey == c.consumerKey)
-      .map(c => c.consumerSecret)
-  }
+  override def getConsumerSecret(consumerKey: String): Option[String] =
+    Await.result(asyncPers.getConsumerSecret(consumerKey), 2 seconds)
 
-  override def getUsername(consumerKey: String, accessToken: String): Option[String] = {
-    accessTokens.find(t => consumerKey == t.consumerKey && accessToken == t.accessToken)
-      .map(_.username)
-  }
+  override def getUsername(consumerKey: String, accessToken: String): Option[String] =
+    Await.result(asyncPers.getUsername(consumerKey, accessToken), 2 seconds)
 
-  override def getRequestTokenSecret(consumerKey: String, requestToken: String): Option[String] = {
-    requestTokens.find(t => consumerKey == t.consumerKey && requestToken == t.requestToken)
-      .map(t => t.requestTokenSecret)
-  }
+  override def getRequestTokenSecret(consumerKey: String, requestToken: String): Option[String] =
+    Await.result(asyncPers.getRequestTokenSecret(consumerKey, requestToken), 2 seconds)
 
-  override def persistNonce(nonce: String, consumerKey: String, token: String): Unit = {
-    nonces += Nonce(nonce, consumerKey, token)
-  }
+  override def persistNonce(nonce: String, consumerKey: String, token: String): Unit =
+    Await.result(asyncPers.persistNonce(nonce, consumerKey, token), 2 seconds)
 
-  override def deleteRequestToken(consumerKey: String, requestToken: String): Unit = {
-    val someToken = requestTokens.find(t => consumerKey == t.consumerKey && requestToken == t.requestToken).get
-    requestTokens -= someToken
-  }
+  override def deleteRequestToken(consumerKey: String, requestToken: String): Unit =
+    Await.result(asyncPers.deleteRequestToken(consumerKey, requestToken), 2 seconds)
 }
