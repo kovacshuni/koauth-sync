@@ -7,12 +7,12 @@ import scala.concurrent.duration._
 
 class ExampleMemoryPersistence(ec: ExecutionContext) extends InMemoryPersistence(ec) {
 
-  override protected val asyncPers = new persistence.ExampleMemoryPersistence(ec)
+  override val asyncPers = new persistence.ExampleMemoryPersistence(ec)
 }
 
 class InMemoryPersistence(ec: ExecutionContext) extends Persistence {
 
-  protected val asyncPers = new persistence.InMemoryPersistence(ec)
+  val asyncPers = new persistence.InMemoryPersistence(ec)
 
   override def nonceExists(nonce: String, consumerKey: String, token: String): Boolean =
     Await.result(asyncPers.nonceExists(nonce, consumerKey, token), 2 seconds)
