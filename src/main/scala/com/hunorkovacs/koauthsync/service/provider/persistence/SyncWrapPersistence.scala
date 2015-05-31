@@ -2,17 +2,10 @@ package com.hunorkovacs.koauthsync.service.provider.persistence
 
 import com.hunorkovacs.koauth.service.provider.persistence
 
-import scala.concurrent.{Await, ExecutionContext}
+import scala.concurrent.Await
 import scala.concurrent.duration._
 
-class ExampleMemoryPersistence(ec: ExecutionContext) extends InMemoryPersistence(ec) {
-
-  override val asyncPers = new persistence.ExampleMemoryPersistence(ec)
-}
-
-class InMemoryPersistence(ec: ExecutionContext) extends Persistence {
-
-  val asyncPers = new persistence.InMemoryPersistence(ec)
+class SyncWrapPersistence(asyncPers: persistence.Persistence) extends Persistence {
 
   override def nonceExists(nonce: String, consumerKey: String, token: String): Boolean =
     Await.result(asyncPers.nonceExists(nonce, consumerKey, token), 2 seconds)

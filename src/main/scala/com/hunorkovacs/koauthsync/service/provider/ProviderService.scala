@@ -2,7 +2,7 @@ package com.hunorkovacs.koauthsync.service.provider
 
 import com.hunorkovacs.koauth.domain.{KoauthResponse, KoauthRequest}
 import com.hunorkovacs.koauth.service.{DefaultTokenGenerator, TokenGenerator}
-import com.hunorkovacs.koauth.service.provider.persistence.Persistence
+import com.hunorkovacs.koauthsync.service.provider.persistence.{DoubleWrapPersistence, Persistence}
 
 import scala.concurrent.{Await, ExecutionContext}
 import scala.concurrent.duration._
@@ -21,7 +21,7 @@ protected class CustomProviderService(private val persistence: Persistence,
                                       private val ec: ExecutionContext) extends ProviderService {
 
   private val asyncProvider = com.hunorkovacs.koauth.service.provider.ProviderServiceFactory
-    .createProviderService(persistence, generator, ec)
+    .createProviderService(new DoubleWrapPersistence(persistence, ec), generator, ec)
 
   override def requestToken(request: KoauthRequest): KoauthResponse =
     Await.result(asyncProvider.requestToken(request), 2 seconds)
