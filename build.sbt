@@ -8,7 +8,7 @@ organization := """com.hunorkovacs"""
 
 name := """koauth-sync"""
 
-version := "1.0.1-SNAPSHOT"
+version := "1.1.0-SNAPSHOT"
 
 scalaVersion := "2.11.1"
 
@@ -28,7 +28,7 @@ libraryDependencies ++= Seq(
 )
 
 pomExtra := {
-  <url>https://github.com/kovacshuni/koauth</url>
+  <url>https://github.com/kovacshuni/koauth-sync</url>
     <licenses>
       <license>
         <name>Apache 2</name>
@@ -36,10 +36,9 @@ pomExtra := {
       </license>
     </licenses>
     <scm>
-      <connection>scm:git:github.com/kovacshuni/koauth</connection>
-      <developerConnection>scm:git@github.com:kovacshuni/koauth.git</developerConnection>
-      <tag>sync</tag>
-      <url>https://github.com/kovacshuni/koauth/tree/sync</url>
+      <connection>scm:git:github.com/kovacshuni/koauth-sync</connection>
+      <developerConnection>scm:git@github.com:kovacshuni/koauth-sync.git</developerConnection>
+      <url>https://github.com/kovacshuni/koauth-sync</url>
     </scm>
     <developers>
       <developer>
@@ -53,5 +52,3 @@ pomExtra := {
 publishTo := Some("releases"  at "https://oss.sonatype.org/service/local/staging/deploy/maven2")
 
 publishMavenStyle := true
-
-publishArtifact in Test := true
