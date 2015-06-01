@@ -14,7 +14,7 @@ scalaVersion := "2.11.1"
 
 crossScalaVersions := Seq("2.10.4")
 
-scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation")
+scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation", "-target:jvm-1.7")
 
 resolvers ++= Seq(
   "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/",
