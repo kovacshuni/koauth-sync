@@ -8,7 +8,7 @@ organization := """com.hunorkovacs"""
 
 name := """koauth-sync"""
 
-version := "1.1.0-SNAPSHOT"
+version := "1.1.0"
 
 scalaVersion := "2.11.1"
 
@@ -24,7 +24,7 @@ resolvers ++= Seq(
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.3.4",
   "org.slf4j" % "slf4j-api" % "1.7.7",
-  "com.hunorkovacs" %% "koauth" % "1.0.1-SNAPSHOT"
+  "com.hunorkovacs" %% "koauth" % "1.1.0"
 )
 
 pomExtra := {
@@ -39,6 +39,7 @@ pomExtra := {
       <connection>scm:git:github.com/kovacshuni/koauth-sync</connection>
       <developerConnection>scm:git@github.com:kovacshuni/koauth-sync.git</developerConnection>
       <url>https://github.com/kovacshuni/koauth-sync</url>
+      <tag>1.1.x</tag>
     </scm>
     <developers>
       <developer>

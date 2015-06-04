@@ -11,6 +11,22 @@ specifications for both HTTP server and client.
 
 See the rest of the README in [the original project](https://github.com/kovacshuni/koauth).
 
+```
+<dependency>
+    <groupId>com.hunorkovacs</groupId>
+    <artifactId>koauth-sync_2.11</artifactId>
+    <version>1.1.0</version>
+</dependency>
+```
+
+or
+
+```
+resolvers += "Sonatype Releases" at "https://oss.sonatype.org/content/repositories/releases/"
+
+libraryDependencies += "com.hunorkovacs" %% "koauth-sync" % "1.1.0"
+```
+
 Versions are matched to koauth's versions.
 
 ## Contributing
