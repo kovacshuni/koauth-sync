@@ -29,16 +29,12 @@ libraryDependencies += "com.hunorkovacs" %% "koauth-sync" % "1.1.0"
 
 Versions are matched to koauth's versions.
 
-## Contributing
-
-Just create a pull-request, i'll try to be quick.
-
-## Owner
+Owner:
 
 Hunor Kovács  
 kovacshuni@yahoo.com  
 [hunorkovacs.com](http://www.hunorkovacs.com)
 
-## Licence
+Licence:
 
 Licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0) .
