@@ -11,6 +11,8 @@ specifications for both HTTP server and client.
 
 See the rest of the README in [the original project](https://github.com/kovacshuni/koauth).
 
+Versions are matched to koauth's versions.
+
 ## Contributing
 
 Just create a pull-request, i'll try to be quick.
